@@ -21,12 +21,12 @@ function tokens(n) {
 contract('TokenFarm', ([owner, investor, investor2]) => {
 	let ethToken, tokenFarm
 
-	before(async () => {
+	beforeEach(async () => {
 		// load Contrats
 		ethToken = await MEthToken.new()
 		tokenFarm = await TokenFarm.new(ethToken.address)
 
-		// Transfer all Dai reward tokens to farm (1million)
+		// Transfer all Eth reward tokens to farm (1million)
 		await ethToken.transfer(tokenFarm.address, tokens('1000000'))
 
 		// Send tokens to investor
@@ -136,7 +136,7 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 
 	describe('earned()', () => {
 		it('should be 0 when not staking', async () => {
-			const earned = await tokenFarm.earned(investor2);
+			const earned = await tokenFarm.earned(investor);
 			console.log(earned);
 			assert.strictEqual(earned.toString(), ZERO_BN.toString());
 		});
@@ -160,20 +160,20 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 		});
 
 		it('rewardRate should increase if new rewards come before DURATION ends', async () => {
-			const totalToDistribute = toUnit('5000');
+			const totalToDistribute = toUnit('5');
 
 			await ethToken.transfer(tokenFarm.address, totalToDistribute, { from: owner });
 			await tokenFarm.notifyRewardAmount(totalToDistribute);
 
-			const rewardRateInitial = await tokenFarm.rewardRate();
+			const rewardRateI = await tokenFarm.rewardRate();
 
 			await ethToken.transfer(tokenFarm.address, totalToDistribute, { from: owner });
 			await tokenFarm.notifyRewardAmount(totalToDistribute);
 
-			const rewardRateLater = await tokenFarm.rewardRate();
+			const rewardRateL = await tokenFarm.rewardRate();
 
-			assert.isTrue(rewardRateInitial > ZERO_BN);
-			assert.isTrue(rewardRateLater > rewardRateInitial);
+			assert.isTrue(rewardRateI > ZERO_BN);
+			assert.isTrue(rewardRateL < rewardRateI);
 		});
 
 		it('rewards token balance should rollover after DURATION', async () => {
@@ -297,138 +297,64 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 		});
 	});
 
-	// describe('Integration Tests', () => {
-	// 	// before(async () => {
-	// 	// 	// Set rewardDistribution address
-	// 	// 	await tokenFarm.setRewardsDistribution(rewardsDistribution.address, {
-	// 	// 		from: owner,
-	// 	// 	});
-	// 	// 	assert.equal(await tokenFarm.rewardsDistribution(), rewardsDistribution.address);
 
-	// 	// 	await setRewardsTokenExchangeRate();
-	// 	// });
 
-	// 	it('stake and claim', async () => {
-	// 		// Transfer some LP Tokens to user
-	// 		const totalToStake = toUnit('500');
-	// 		await ethToken.transfer(investor, totalToStake, { from: owner });
+	describe('Integration Test', async () => {
 
-	// 		// Stake LP Tokens
-	// 		await ethToken.approve(tokenFarm.address, totalToStake, { from: investor });
-	// 		await tokenFarm.stakeTokens(totalToStake, { from: investor });
+		it('rewards investors for staking mDai tokens', async() => {
+			let result
 
-	// 		// Distribute some rewards
-	// 		const totalToDistribute = toUnit('35000');
-	// 		// assert.equal(await rewardsDistribution.distributionsLength(), 0);
-	// 		// await rewardsDistribution.addRewardDistribution(tokenFarm.address, totalToDistribute, {
-	// 		// 	from: owner,
-	// 		// });
-	// 		// assert.equal(await rewardsDistribution.distributionsLength(), 1);
+			// Check investor balance before staking
+			result = await ethToken.balanceOf(investor2)
+			assert.equal(result.toString(), tokens('0'), 'investor Mock Eth wallet balance correct before staking')
 
-	// 		// // Transfer Rewards to the RewardsDistribution contract address
-	// 		// await ethToken.transfer(rewardsDistribution.address, totalToDistribute, { from: owner });
+			// Stake 100 from investor
+			const totalToStake = toUnit('100');
+			await ethToken.transfer(investor2, totalToStake, { from: owner });
 
-	// 		// // Distribute Rewards called from Synthetix contract as the authority to distribute
-	// 		// await rewardsDistribution.distributeRewards(totalToDistribute, {
-	// 		// 	from: authority,
-	// 		// });
+			// Stake Mock Eth Tokens
+			await ethToken.approve(tokenFarm.address, tokens('100'), { from: investor2 })
+			await tokenFarm.stakeTokens(tokens('100'), { from: investor2 })
 
-	// 		// Period finish should be ~7 days from now
-	// 		const periodFinish = await tokenFarm.periodFinish();
-	// 		const curTimestamp = await currentTime();
-	// 		// assert.equal(parseInt(periodFinish.toString(), 10), curTimestamp + DAY * 7);
+			// Check staking result
+			result = await ethToken.balanceOf(investor2)
+			assert.equal(result.toString(), tokens('0'), 'investor Mock Eth wallet balance correct before staking')
 
-	// 		// Reward duration is 7 days, so we'll
-	// 		// Fastforward time by 6 days to prevent expiration
-	// 		await fastForward(DAY * 6);
+			result = await ethToken.balanceOf(tokenFarm.address)
+			assert.equal(result.toString(), tokens('1000100'), 'Token Farm Mock Eth balance correct after staking')
 
-	// 		// Reward rate and reward per token
-	// 		const rewardRate = await tokenFarm.rewardRate();
-	// 		assert.isTrue(rewardRate == ZERO_BN);
+			result = await tokenFarm.stakingBalance(investor2)
+			assert.equal(result.toString(), tokens('100'), 'investor staking balance is correct after staking')
 
-	// 		const rewardPerToken = await tokenFarm.rewardPerToken();
-	// 		// assert.isTrue(rewardPerToken > ZERO_BN);
+			result = await tokenFarm.isStaking(investor2)
+			assert.equal(result.toString(), 'true', 'investor staking status correct after staking')
 
-	// 		// Make sure we earned in proportion to reward per token
-	// 		const rewardRewardsEarned = await tokenFarm.earned(investor);
-	// 		//assert.bnEqual(rewardRewardsEarned, rewardPerToken.mul(totalToStake).div(toUnit(1)));
+			// Issue Tokens
+			await tokenFarm.issueTokens({ from: owner })
 
-	// 		// Make sure after withdrawing, we still have the ~amount of rewardRewards
-	// 		// The two values will be a bit different as time has "passed"
-	// 		const initialWithdraw = toUnit('100');
-	// 		await tokenFarm.withdraw(initialWithdraw, { from: investor });
-	// 		//assert.bnEqual(initialWithdraw, await ethToken.balanceOf(investor));
+			// Check balances after issuance
+			result = await ethToken.balanceOf(investor2)
+			assert.equal(result.toString(), tokens('100'), 'investor DApp Token wallet balance correct after issuance')
 
-	// 		const rewardRewardsEarnedPostWithdraw = await tokenFarm.earned(investor);
-	// 		//assert.bnClose(rewardRewardsEarned, rewardRewardsEarnedPostWithdraw, toUnit('0.1'));
+			// Ensure that only owner can issue tokens
+			await tokenFarm.issueTokens({ from: investor2}).should.be.rejected;
 
-	// 		// Get rewards
-	// 		const initialRewardBal = await ethToken.balanceOf(investor);
-	// 		await tokenFarm.getReward({ from: investor });
-	// 		const postRewardRewardBal = await ethToken.balanceOf(investor);
+			// Unstake tokens
+			await tokenFarm.unstakeTokens({ from: investor2 });
 
-	// 		//assert.isTrue(postRewardRewardBal > initialRewardBal);
+			// Check results after unstaking
+			result = await ethToken.balanceOf(investor2)
+			assert.equal(result.toString(), tokens('200'), 'investor Mock Eth wallet balance correct after staking')
 
-	// 		// Exit
-	// 		const preExitLPBal = await ethToken.balanceOf(investor);
-	// 		await tokenFarm.exit({ from: investor });
-	// 		const postExitLPBal = await ethToken.balanceOf(investor);
-	// 		//assert.isTrue(postExitLPBal > preExitLPBal);
-	// 	});
-	// });
+			result = await ethToken.balanceOf(tokenFarm.address)
+			assert.equal(result.toString(), tokens('999900'), 'Token Farm Mock Eth balance correct after staking')
 
-	// describe('Farming tokens', async () => {
+			result = await tokenFarm.stakingBalance(investor2)
+			assert.equal(result.toString(), tokens('0'), 'investor staking balance correct after staking')
 
-	// 	it('rewards investors for staking mDai tokens', async() => {
-	// 		let result
+			result = await tokenFarm.isStaking(investor2)
+			assert.equal(result.toString(), 'false', 'investor staking status correct after staking')
 
-	// 		// Check investor balance before staking
-	// 		result = await ethToken.balanceOf(investor)
-	// 		assert.equal(result.toString(), tokens('100'), 'investor Mock DAI wallet balance correct before staking')
-
-	// 		// Stake Mock DAI Tokens
-	// 		await ethToken.approve(tokenFarm.address, tokens('100'), { from: investor })
-	// 		await tokenFarm.stakeTokens(tokens('100'), { from: investor })
-
-	// 		// Check staking result
-	// 		result = await ethToken.balanceOf(investor)
-	// 		assert.equal(result.toString(), tokens('0'), 'investor Mock DAI wallet balance correct before staking')
-
-	// 		result = await ethToken.balanceOf(tokenFarm.address)
-	// 		assert.equal(result.toString(), tokens('1000100'), 'Token Farm Mock DAI balance correct after staking')
-
-	// 		result = await tokenFarm.stakingBalance(investor)
-	// 		assert.equal(result.toString(), tokens('100'), 'investor staking balance is correct after staking')
-
-	// 		result = await tokenFarm.isStaking(investor)
-	// 		assert.equal(result.toString(), 'true', 'investor staking status correct after staking')
-
-	// 		// Issue Tokens
-	// 		await tokenFarm.issueTokens({ from: owner })
-
-	// 		// Check balances after issuance
-	// 		result = await ethToken.balanceOf(investor)
-	// 		assert.equal(result.toString(), tokens('100'), 'investor DApp Token wallet balance correct after issuance')
-
-	// 		// Ensure that only owner can issue tokens
-	// 		await tokenFarm.issueTokens({ from: investor}).should.be.rejected;
-
-	// 		// Unstake tokens
-	// 		await tokenFarm.unstakeTokens({ from: investor });
-
-	// 		// Check results after unstaking
-	// 		result = await ethToken.balanceOf(investor)
-	// 		assert.equal(result.toString(), tokens('200'), 'investor Mock DAI wallet balance correct after staking')
-
-	// 		result = await ethToken.balanceOf(tokenFarm.address)
-	// 		assert.equal(result.toString(), tokens('999900'), 'Token Farm Mock DAI balance correct after staking')
-
-	// 		result = await tokenFarm.stakingBalance(investor)
-	// 		assert.equal(result.toString(), tokens('0'), 'investor staking balance correct after staking')
-
-	// 		result = await tokenFarm.isStaking(investor)
-	// 		assert.equal(result.toString(), 'false', 'investor staking status correct after staking')
-
-	// 	})
-	// })
+		})
+	})
 })
