@@ -2,7 +2,7 @@ const MEthToken = artifacts.require("MEthToken")
 const TokenFarm = artifacts.require("TokenFarm")
 
 module.exports = async function(deployer, network, accounts) {
-	// Deploy Mock DAI Token
+	// Deploy Mock Eth Token
 	await deployer.deploy(MEthToken) 
 	const ethToken = await MEthToken.deployed()
 
