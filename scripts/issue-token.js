@@ -1,4 +1,4 @@
-const TokenFarm = artifacts.require("TokenFarm")
+const TokenFarm = artifacts.require("./contracts/TokenFarm.sol")
 
 module.exports = async function(callback) {
 	let tokenFarm = await TokenFarm.deployed()

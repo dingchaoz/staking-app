@@ -18,14 +18,6 @@ contract TokenFarm is Ownable, ReentrancyGuard{
 	// total Rewards to be distributed
 	uint256 public totalRewards;
 
-	// total reward periods, use up all rewards till the time ends
-
-	// first staking timestamp is recorded and started the counting
-
-	// each week, manually call the distributeRewards function which compute each staker's share, and add rewards to their rewards account
-	// need to check 7 days past the last reward date --> this can be scheduled using etherum alarm clock but takes fees
-
-
 	uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
     uint256 public rewardsDuration = 7 days;
