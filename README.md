@@ -11,9 +11,18 @@ This repository presents following deliverables:
 - 2 smart contracts:
   - 1. [MethToken.sol](.src/contracts/MEthToken.sol): an ECR20 smart contract allow users to define their own token to be staked and rewarded to a pool, deployed on Ropsten Testnet at this [address](https://ropsten.etherscan.io/address/0x172A7156ede95D49eFcFc5A7cb2e28123F4b1c97)
   - 2. [TokenFarm.sol](.src/contracts/TokenFarm.sol): a smart contract implements the concept of building a yield farm pool of an ECR20 token, deployed on Ropsten Testnet at this [address](https://ropsten.etherscan.io/address/0xaCcA74DD488147eC29D4a9CbA62917d78d4bb798)
+
+  ![](./images/demo.gif)
+
 - Unit and Integration tests: [TokenFarm.test.js](.test/TokenFarm.test.js), and [utils.js](.utils/utils.js) to test the development and deployment of the smart contracts
+
+  ![](./images/test_demo.gif)
 - A client-side javascript: [get-total-staked.js](.scripts/get-total-staked.js) to allow user interact with the smart contract to get total staked value.
+
+  ![](./images/get_stake_value.gif)
 - A subgraph on Graph protocol to query staked values, reward values and stakers, viewable on the [Graph dashboard](https://api.thegraph.com/subgraphs/name/dingchaoz/staking-app)
+
+  ![](./images/subgraph.gif)
 
 ---
 
