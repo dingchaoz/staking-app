@@ -64,7 +64,7 @@ contract TokenFarm is Ownable, ReentrancyGuard{
 	/* ========== MUTATIVE FUNCTIONS ========== */
 
 	// 1. Stakes Tokens (Deposit): An investor will deposit the Token into the smart contracts to starting earning rewards
-	function stakeTokens(uint _amount) external nonReentrant {	
+	function stakeTokens(uint _amount) external nonReentrant updateReward(msg.sender) {	
 
 		require(_amount > 0, "Cannot stake 0");	
 

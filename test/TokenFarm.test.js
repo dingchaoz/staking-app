@@ -196,8 +196,8 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 
 			await fastForward(DAY * 7);
 			const earnedSecond = await tokenFarm.earned(investor);
-			// assert.strictEqual(earnedSecond.toString() ,earnedFirst.add(earnedFirst).toString());
-			assert.isTrue(earnedSecond > earnedFirst);
+			assert.strictEqual(earnedSecond.toString() ,earnedFirst.add(earnedFirst).toString());
+			
 
 		});
 	});
