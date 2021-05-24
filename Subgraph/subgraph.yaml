@@ -1,0 +1,41 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: TokenFarm
+    network: ropsten
+    source:
+      address: "0xaCcA74DD488147eC29D4a9CbA62917d78d4bb798"
+      abi: TokenFarm
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - Recovered
+        - RewardAdded
+        - RewardPaid
+        - RewardsDurationUpdated
+        - Staked
+        - Withdrawn
+      abis:
+        - name: TokenFarm
+          file: ./abis/TokenFarm.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Recovered(address,uint256)
+          handler: handleRecovered
+        - event: RewardAdded(uint256)
+          handler: handleRewardAdded
+        - event: RewardPaid(indexed address,uint256)
+          handler: handleRewardPaid
+        - event: RewardsDurationUpdated(uint256)
+          handler: handleRewardsDurationUpdated
+        - event: Staked(indexed address,uint256)
+          handler: handleStaked
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn
+      file: ./src/mapping.ts

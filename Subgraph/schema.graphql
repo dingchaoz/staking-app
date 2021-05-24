@@ -1,0 +1,28 @@
+type ExampleEntity @entity {
+  id: ID!
+  count: BigInt!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+}
+
+type Token @entity {
+  id: ID!
+}
+
+type StakeBalance @entity {
+  id: ID!
+  amount: String!
+}
+
+type RewardBalance @entity {
+  id: ID!
+  amount: String!
+}
+
+type Stakers @entity {
+  id: ID!
+  address : Bytes!
+  stakedAmount: String!
+  rewardedAmount: String!
+
+}

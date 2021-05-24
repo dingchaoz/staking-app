@@ -75,7 +75,7 @@ This repository presents following deliverables:
 - [SafeMath](https://docs.openzeppelin.com/contracts/4.x/utilities#api:math.adoc#SafeMath) is used to check for overflows in case of addition, underflow in case of substractions as well as when performing multiplications and divisions.
 
 ### Modularity and Reusablity
-- Rewardrate is impacted each time a new deposit is added or withdrawn from the pool, to 
+- Rewardrate is impacted each time a new deposit is added or withdrawn from the pool,
 
 ### Tests
 
