@@ -52,6 +52,7 @@ This repository presents following deliverables:
 
 - Deploy smart contracts to the Ethereum blockchain locally
 
+      ganache-cli
       truffle migrate --reset
           
 - Run the scripts to issue tokens and query total staked tokens locally on a simulation network such as Ganache-cli
@@ -71,17 +72,27 @@ This repository presents following deliverables:
 ## Design and Development practices
 ### Security 
 - The access control of your contract may govern who can mint tokens, vote on proposals, freeze transfers, and many other things, [Ownable](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol) from openzeppline is used for implementing ownership in our contracts
+      ![](./images/ownable.png)
+
 - Prevent reentrancy attack: ReentrancyGuard, [which](https://docs.openzeppelin.com/contracts/2.x/api/utils#ReentrancyGuard-nonReentrant--) is applied to several functions to make sure there are no nested (reentrant) calls to them, also Checks-effects-interactions pattern is used to ensure only after all state changes are resolved should the function interact with other contracts
+      ![](./images/nonReentrant.png)
+
 - [SafeMath](https://docs.openzeppelin.com/contracts/4.x/utilities#api:math.adoc#SafeMath) is used to check for overflows in case of addition, underflow in case of substractions as well as when performing multiplications and divisions.
+      ![](./images/safeMath.png)
 
 ### Modularity and Reusablity
 - Rewardrate is impacted each time a new deposit is added or withdrawn from the pool, to make such operation
-reusable, an updateReward modifier was created to modify the behaviours.
- of stakeTokens, withdraw ,getReward and notifyNewReward 
+reusable, an `updateReward` modifier was created to modify the behaviours of stakeTokens, withdraw ,getReward and notifyNewReward 
+      ![](./images/updateReward.png)
 
 ### Tests
+- Mocking time triggered function is obviously not possible on the main network, since the the block creation and timestamping is done by the miners. For testing locally through helper functions: `evm_mine, evm_increaseTime` provided by the ganache-cli, and further modulized `fastForward` and `fastForwardTo` two exported functions allow us to travel through time easily in tests
+      ![](./images/fastForward.png)
 
-### Rewards Distribution Manual vs Auto
+### Rewards Distribution Lazy vs Eager Evaluation
+- Distributing rewards weekly requires ust o design functions in the contract to be called at a later time, there are two approaches
+- Lazy Evaluation: it means that the contract's state will be updated only when needed, makes more sense for contracts that naturally incentivise users to call them at a future date. This approach is chosen in the current contract as it is easy to be implemented.  
+- Eager Evaluation: it means scheduling a contract to be called at a specified block in the future, which is more useful when state transitions are lacking incentives, [Ethereum Alarm Clock](https://www.ethereum-alarm-clock.com/) provides a TimeNode acting as the counterparty to transactions that are scheduled.
 
 ## Citation
 If you use this code for your publications, please cite it as:
