@@ -73,7 +73,7 @@ This repository presents following deliverables:
 ### Security 
 - The access control of your contract may govern who can mint tokens, vote on proposals, freeze transfers, and many other things, [Ownable](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol) from openzeppline is used for implementing ownership in our contracts
       
-      ![](./images/ownable.png)
+![](./images/ownable.png)
 
 - Prevent reentrancy attack: ReentrancyGuard, [which](https://docs.openzeppelin.com/contracts/2.x/api/utils#ReentrancyGuard-nonReentrant--) is applied to several functions to make sure there are no nested (reentrant) calls to them, also Checks-effects-interactions pattern is used to ensure only after all state changes are resolved should the function interact with other contracts
       ![](./images/nonReentrant.png)
@@ -85,12 +85,12 @@ This repository presents following deliverables:
 - Rewardrate is impacted each time a new deposit is added or withdrawn from the pool, to make such operation
 reusable, an `updateReward` modifier was created to modify the behaviours of stakeTokens, withdraw ,getReward and notifyNewReward 
       
-      ![](./images/updateReward.png)
+![](./images/updateReward.png)
 
 ### Tests
 - Mocking time triggered function is obviously not possible on the main network, since the the block creation and timestamping is done by the miners. For testing locally through helper functions: `evm_mine, evm_increaseTime` provided by the ganache-cli, and further modulized `fastForward` and `fastForwardTo` two exported functions allow us to travel through time easily in tests
       
-      ![](./images/fastForward.png)
+![](./images/fastForward.png)
 
 ### Rewards Distribution Lazy vs Eager Evaluation
 - Distributing rewards weekly requires ust o design functions in the contract to be called at a later time, there are two approaches
