@@ -5,6 +5,7 @@ const { time } = require('@openzeppelin/test-helpers');
 const { assert } = require("chai");
 const { toBN } = require('web3-utils');
 const truffleAssert = require('truffle-assertions');
+const web3_utils = require("web3");
 
 
 const DAY = 86400;
@@ -63,7 +64,8 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 	describe('Token Farm deployment', async () => {
 		it('has a name', async () => {			
 			const name = await tokenFarm.name()
-			assert.equal(name, 'Eth Staking Farm')
+			var stringName = web3_utils.utils.hexToUtf8(name)
+			assert.isTrue(stringName == 'Staking Farm')
 		})
 	})
 
@@ -237,7 +239,6 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 
 			const duration = await tokenFarm.rewardsDuration();
 			const rewardRate = await tokenFarm.rewardRate();
-
 			assert.isTrue(rewardForDuration > ZERO_BN);
 			assert.strictEqual(rewardForDuration.toString(), duration.mul(rewardRate).toString());
 		});

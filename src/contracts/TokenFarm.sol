@@ -12,7 +12,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /* ========== STATE VARIABLES ========== */
 
-    string constant name = "Eth Staking Farm";
+    bytes32 public constant NAME = "Staking Farm";
     MEthToken public ethToken;
 
     // total Rewards to be distributed
@@ -20,7 +20,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
-    uint256 constant rewardsDuration = 7 days;
+    uint256 constant REWARDSDURATION = 7 days;
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
     uint256 public totalStaked;
@@ -117,7 +117,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     // Unstaking Tokens (Withdraw): Withdraw money from Dapp
-    function unstakeTokens() external nonReentrant{
+    function unstakeTokens() public {
         // Update staking status
         isStaking[msg.sender] = false;
 
@@ -145,11 +145,11 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         updateReward(address(0))
     {
         if (block.timestamp >= periodFinish) {
-            rewardRate = reward.div(rewardsDuration);
+            rewardRate = reward.div(REWARDSDURATION);
         } else {
             uint256 remaining = periodFinish.sub(block.timestamp);
             uint256 leftover = remaining.mul(rewardRate);
-            rewardRate = reward.add(leftover).div(rewardsDuration);
+            rewardRate = reward.add(leftover).div(REWARDSDURATION);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
@@ -158,17 +158,25 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint256 balance = ethToken.balanceOf(address(this));
         require(
-            rewardRate <= balance.div(rewardsDuration),
+            rewardRate <= balance.div(REWARDSDURATION),
             "Provided reward too high"
         );
 
         lastUpdateTime = block.timestamp;
-        periodFinish = block.timestamp.add(rewardsDuration);
+        periodFinish = block.timestamp.add(REWARDSDURATION);
         emit RewardAdded(reward);
     }
 
     /* ========== VIEWS ========== */
 
+
+    function name() public pure returns (bytes32) {
+        return NAME;
+    }
+
+    function rewardsDuration() public pure returns (uint256) {
+        return REWARDSDURATION;
+    }
     function totalSupply() external view returns (uint256) {
         return totalStaked;
     }
@@ -204,6 +212,6 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     function getRewardForDuration() external view returns (uint256) {
-        return rewardRate.mul(rewardsDuration);
+        return rewardRate.mul(REWARDSDURATION);
     }
 }
