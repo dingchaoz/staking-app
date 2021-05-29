@@ -12,15 +12,15 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /* ========== STATE VARIABLES ========== */
 
-    string public name = "Eth Staking Farm";
+    string constant name = "Eth Staking Farm";
     MEthToken public ethToken;
 
     // total Rewards to be distributed
-    uint256 public totalRewards;
+    // uint256 public totalRewards;
 
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
-    uint256 public rewardsDuration = 7 days;
+    uint256 constant rewardsDuration = 7 days;
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
     uint256 public totalStaked;
@@ -63,18 +63,18 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     // 1. Stakes Tokens (Deposit): An investor will deposit the Token into the smart contracts to starting earning rewards
-    function stakeTokens(uint256 _amount)
+    function stakeTokens(uint256 amount)
         external
         nonReentrant
         updateReward(msg.sender)
     {
-        require(_amount > 0, "Cannot stake 0");
+        require(amount > 0, "Cannot stake 0");
 
         //Update total staked balance
-        totalStaked = totalStaked.add(_amount);
+        totalStaked = totalStaked.add(amount);
 
         // Update staking balance
-        stakingBalance[msg.sender] = stakingBalance[msg.sender] + _amount;
+        stakingBalance[msg.sender] = stakingBalance[msg.sender] + amount;
 
         // Add user to stakers array *only* if they haven't staked already
         if (!hasStaked[msg.sender]) {
@@ -89,22 +89,22 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the transfer fails, and an attacker can call deposit for free..
         // Recommendation
         // Use SafeERC20, or ensure that the transfer/transferFrom return value is checked.
-        ethToken.transferFrom(msg.sender, address(this), _amount);
+        ethToken.transferFrom(msg.sender, address(this), amount);
 
         // emit staked event
-        emit Staked(msg.sender, _amount);
+        emit Staked(msg.sender, amount);
     }
 
-    function withdraw(uint256 _amount)
+    function withdraw(uint256 amount)
         public
         nonReentrant
         updateReward(msg.sender)
     {
-        require(_amount > 0, "Cannot withdraw 0");
-        totalStaked = totalStaked.sub(_amount);
-        stakingBalance[msg.sender] = stakingBalance[msg.sender].sub(_amount);
-        ethToken.transfer(msg.sender, _amount);
-        emit Withdrawn(msg.sender, _amount);
+        require(amount > 0, "Cannot withdraw 0");
+        totalStaked = totalStaked.sub(amount);
+        stakingBalance[msg.sender] = stakingBalance[msg.sender].sub(amount);
+        ethToken.transfer(msg.sender, amount);
+        emit Withdrawn(msg.sender, amount);
     }
 
     function getReward() public nonReentrant updateReward(msg.sender) {
