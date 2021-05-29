@@ -86,6 +86,9 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         hasStaked[msg.sender] = true;
 
         // Transfer Mock Eth tokens to this contract for staking
+        // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the transfer fails, and an attacker can call deposit for free..
+        // Recommendation
+        // Use SafeERC20, or ensure that the transfer/transferFrom return value is checked.
         ethToken.transferFrom(msg.sender, address(this), _amount);
 
         // emit staked event
@@ -114,7 +117,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     // Unstaking Tokens (Withdraw): Withdraw money from Dapp
-    function unstakeTokens() public {
+    function unstakeTokens() external nonReentrant{
         // Update staking status
         isStaking[msg.sender] = false;
 
@@ -124,7 +127,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     // Issuing Tokens: Earning interest (issuing tokens for people who stake them, distribute dap tokens as interes and also allow the investor to unstake their tokens from the app, give them intereset using the app)
-    function issueTokens() public onlyOwner {
+    function issueTokens() external onlyOwner {
         // Issue tokens to all stakers
         for (uint256 i = 0; i < stakers.length; i++) {
             address recipient = stakers[i];
@@ -136,6 +139,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     // owner call this function to add reward amount to the total rewards
+    // Solidity integer division might truncate. As a result, performing multiplication before division can sometimes avoid loss of precision.
     function notifyRewardAmount(uint256 reward)
         external
         updateReward(address(0))

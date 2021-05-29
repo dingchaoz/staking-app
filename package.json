@@ -47,6 +47,7 @@
     "@babel/register": "^7.12.10",
     "http-server": "^0.12.3",
     "prettier": "^2.3.0",
-    "prettier-plugin-solidity": "*"
+    "prettier-plugin-solidity": "*",
+    "solidity-coverage": "^0.7.16"
   }
 }
