@@ -144,12 +144,16 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         external
         updateReward(address(0))
     {
-        if (block.timestamp >= periodFinish) {
-            rewardRate = reward.div(REWARDSDURATION);
-        } else {
+
+
+        if (block.timestamp < periodFinish) {
             uint256 remaining = periodFinish.sub(block.timestamp);
-            uint256 leftover = remaining.mul(rewardRate);
+            // uint256 leftover = remaining.mul(rewardRate);
+            uint256 leftover = remaining.mul(reward).div(REWARDSDURATION);
             rewardRate = reward.add(leftover).div(REWARDSDURATION);
+            
+        } else {
+            rewardRate = reward.div(REWARDSDURATION);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
