@@ -7,13 +7,18 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 contract TokenFarm is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     /* ========== STATE VARIABLES ========== */
 
     bytes32 public constant NAME = "Staking Farm";
-    MEthToken public ethToken;
+    IERC20 public token;
+    MEthToken public mToken;
 
     // total Rewards to be distributed
     // uint256 public totalRewards;
@@ -35,8 +40,8 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     /* ========== CONSTRUCTOR ========== */
 
     constructor(MEthToken _ethToken) {
-        ethToken = _ethToken;
-        //owner = msg.sender;
+        mToken = _ethToken;
+        token = IERC20(mToken);
     }
 
     /* ========== EVENTS ========== */
@@ -89,7 +94,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the transfer fails, and an attacker can call deposit for free..
         // Recommendation
         // Use SafeERC20, or ensure that the transfer/transferFrom return value is checked.
-        ethToken.transferFrom(msg.sender, address(this), amount);
+        token.transferFrom(msg.sender, address(this), amount);
 
         // emit staked event
         emit Staked(msg.sender, amount);
@@ -103,7 +108,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         require(amount > 0, "Cannot withdraw 0");
         totalStaked = totalStaked.sub(amount);
         stakingBalance[msg.sender] = stakingBalance[msg.sender].sub(amount);
-        ethToken.transfer(msg.sender, amount);
+        token.transfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -111,7 +116,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            ethToken.transfer(msg.sender, reward);
+            token.transfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
@@ -133,7 +138,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
             address recipient = stakers[i];
             uint256 balance = stakingBalance[recipient];
             if (balance > 0) {
-                ethToken.transfer(recipient, balance);
+                token.transfer(recipient, balance);
             }
         }
     }
@@ -160,7 +165,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint256 balance = ethToken.balanceOf(address(this));
+        uint256 balance = token.balanceOf(address(this));
         require(
             rewardRate <= balance.div(REWARDSDURATION),
             "Provided reward too high"
