@@ -91,10 +91,10 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         hasStaked[msg.sender] = true;
 
         // Transfer Mock Eth tokens to this contract for staking
-        // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the transfer fails, and an attacker can call deposit for free..
+        // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the safeTransfer fails, and an attacker can call deposit for free..
         // Recommendation
-        // Use SafeERC20, or ensure that the transfer/transferFrom return value is checked.
-        token.transferFrom(msg.sender, address(this), amount);
+        // Use SafeERC20, or ensure that the safeTransfer/safeTransferFrom return value is checked.
+        token.safeTransferFrom(msg.sender, address(this), amount);
 
         // emit staked event
         emit Staked(msg.sender, amount);
@@ -108,7 +108,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         require(amount > 0, "Cannot withdraw 0");
         totalStaked = totalStaked.sub(amount);
         stakingBalance[msg.sender] = stakingBalance[msg.sender].sub(amount);
-        token.transfer(msg.sender, amount);
+        token.safeTransfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -116,7 +116,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            token.transfer(msg.sender, reward);
+            token.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
@@ -126,9 +126,11 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         // Update staking status
         isStaking[msg.sender] = false;
 
+        getReward();
+
         withdraw(stakingBalance[msg.sender]);
 
-        getReward();
+        
     }
 
     // Issuing Tokens: Earning interest (issuing tokens for people who stake them, distribute dap tokens as interes and also allow the investor to unstake their tokens from the app, give them intereset using the app)
@@ -138,7 +140,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
             address recipient = stakers[i];
             uint256 balance = stakingBalance[recipient];
             if (balance > 0) {
-                token.transfer(recipient, balance);
+                token.safeTransfer(recipient, balance);
             }
         }
     }
