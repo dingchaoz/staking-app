@@ -112,7 +112,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -131,7 +132,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -144,7 +146,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -157,7 +160,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -170,7 +174,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -183,7 +188,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -203,7 +209,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -216,7 +223,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -235,7 +243,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -254,7 +263,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -273,7 +283,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -286,7 +297,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -299,7 +311,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -331,7 +344,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -404,7 +418,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -417,7 +432,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -430,7 +446,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -449,7 +466,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -462,7 +480,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -481,7 +500,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -494,7 +514,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -507,7 +528,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract MEthToken\",\"name\":\"_ethToken\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"RewardAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"RewardPaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Staked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Withdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"NAME\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"earned\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReward\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardForDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hasStaked\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastTimeRewardApplicable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastUpdateTime\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mToken\",\"outputs\":[{\"internalType\":\"contract MEthToken\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"notifyRewardAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"periodFinish\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"refundTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardPerToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardPerTokenStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"rewards\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardsDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"stakeTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"stakers\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"stakingBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalStaked\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unstakeTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"userRewardPerTokenPaid\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"RewardAdded(uint256)\":{\"details\":\"Emitted when reward `amount` is added to the pool.\"},\"RewardPaid(address,uint256)\":{\"details\":\"Emitted when reward `amount` is distribtued to `user`.\"},\"Staked(address,uint256)\":{\"details\":\"Emitted when `user` staked token `amount`.\"},\"Withdrawn(address,uint256)\":{\"details\":\"Emitted when `user` withdrawn token `amount`.\"}},\"kind\":\"dev\",\"methods\":{\"balanceOf(address)\":{\"details\":\"get stake balance \",\"params\":{\"account\":\"user account\"}},\"earned(address)\":{\"details\":\"return reward earned per user account\",\"params\":{\"account\":\"user address 10^18fixed-point division to ensure accuracy\"}},\"getReward()\":{\"details\":\"distribute reward\"},\"getRewardForDuration()\":{\"details\":\"return reward for a given duration\"},\"lastTimeRewardApplicable()\":{\"details\":\"get last time the reward applicable\"},\"name()\":{\"details\":\"get name of the contract \"},\"notifyRewardAmount(uint256)\":{\"details\":\"add reward tokens to the contract by owner\",\"params\":{\"amount\":\"reward token amount\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"refundTokens()\":{\"details\":\"refund tokens to users, all deposited will be withdrawn\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"rewardPerToken()\":{\"details\":\"compute reward per token staked 10^18fixed-point multiplication to ensure accuracy\"},\"rewardsDuration()\":{\"details\":\"get rewards duration\"},\"stakeTokens(uint256)\":{\"details\":\"stake tokens into contract\",\"params\":{\"amount\":\"token amount staked\"}},\"totalSupply()\":{\"details\":\"get total staked supply\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"unstakeTokens()\":{\"details\":\"unstake tokens, all deposited will be withdrawn and reward will also be distributed\"},\"withdraw(uint256)\":{\"details\":\"withdraw tokens out from contract\",\"params\":{\"amount\":\"token amount withdrawn\"}}},\"title\":\"Token Staking Farm contract\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/dingchaoz/Documents/Learning/Blockchain/Solidity/defi_yield_farming-main/src/contracts/TokenFarm.sol\":\"TokenFarm\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/dingchaoz/Documents/Learning/Blockchain/Solidity/defi_yield_farming-main/src/contracts/MEthToken.sol\":{\"keccak256\":\"0xc132c7950379d9800afc77f832da251183f8ecdefdcbb166d973b597221d7ae8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ece7f60825a4cc63bb372499659032f8ca636033098c07bd7a016eda0f5fe9fa\",\"dweb:/ipfs/QmZMXyEgZFkFffo94AnNdLM2sSKw5SkjwGTyJvk8ndAPVy\"]},\"/Users/dingchaoz/Documents/Learning/Blockchain/Solidity/defi_yield_farming-main/src/contracts/TokenFarm.sol\":{\"keccak256\":\"0xadc0e68dbc87ab265a5a80b17ab921786781ad3cee5d0f944d5ea74fe0582ee2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8cd17f5a40402811d0a3d03a395f9d7ec26aafe8ce3169f1fa2d9164ac51b44e\",\"dweb:/ipfs/QmfRRpLR5cxvHBeqcofxkraFDo2WLknxdwPBqPsXHcuMmE\"]},\"@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7\",\"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ\"]},\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"keccak256\":\"0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b9989233808b8f475395f71ea757e277fa167cdac8a24d10f9784783defd313c\",\"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg\"]},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xfeccdcbf67b2006a715e5af1a4c7556004d95b2806552b5cc54e46e8eb7e887b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://45b1f9043c0fb450272f20ed19ef633fcba1b129d602651a856dfae1a2243a2c\",\"dweb:/ipfs/QmUTSQiDikkcNtTtyDpkEwCM5ztVUUh9c1inBukn6HC5Vr\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xf8e8d118a7a8b2e134181f7da655f6266aa3a0f9134b2605747139fcb0c5d835\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9ec48567e7ad06acb670980d5cdf3fd7f3949bf12894f02d68c3bb43e75aa84f\",\"dweb:/ipfs/QmaG3R2J9cz92YT77vFjYrjMNU2wHp4ypwYD62HqDUqS5U\"]},\"@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol\":{\"keccak256\":\"0x83fe24f5c04a56091e50f4a345ff504c8bff658a76d4c43b16878c8f940c53b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d4c3df1a7ca104b633a7d81c6c6f5192367d150cd5a32cba81f7f27012729013\",\"dweb:/ipfs/QmSim72e3ZVsfgZt8UceCvbiSuMRHR6WDsiamqNzZahGSY\"]},\"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0x99f5c21018d796db7833a2100bb0e7411999e248a3c950fb526eee5d2bf47cb7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b31b80dd57f8c28320b01fa4f3ed98ac1aa678f61846c1db2771c996b77a9451\",\"dweb:/ipfs/QmcT2Di5L9t82A9XdYDZ4tWMEPGFVFazKDwC2Vrd135AA3\"]},\"@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a4c96fafff76deda5697c3c5c98cade6e6e1b178254544c106bf360c079ce4e\",\"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX\"]},\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395\",\"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN\"]},\"@openzeppelin/contracts/utils/math/Math.sol\":{\"keccak256\":\"0xa1477864def7febd9826918e50482a1ee7068b337b03804a7e0e98c674ac57c2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5bdd8ea2ace1bf716007318f8aca21d32384f0b8b295adac55147270767441fa\",\"dweb:/ipfs/QmSv235N45Ub3wFXdTLNiS3k4b7FAudtEL8s6g1PwcsCcS\"]},\"@openzeppelin/contracts/utils/math/SafeMath.sol\":{\"keccak256\":\"0x2526b7c6a366fc211bbc176078ab02b83833e7682abcc5b3bed9d700b34e2a3e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5f9529d3d365e8415155cee11394e0f7c0de2152b601b7e77508fce16cb4a509\",\"dweb:/ipfs/QmVhbcLVsAzvqfjsdLwy25XMjgVJm7Z3w2JCNiNbZF2GHT\"]}},\"version\":1}",
@@ -24370,9 +24392,17 @@
     "name": "solc",
     "version": "0.8.4+commit.c7e474f2.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "1622288968064": {
+      "events": {},
+      "links": {},
+      "address": "0xb2C0fFfb67aC5C438549adaFa4B81CAAe140e4e1",
+      "transactionHash": "0xd47f2f68346513fc657ef5b179a4fa78d6414124509a8638af14fae9f119808e"
+    }
+  },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-05-31T19:27:10.299Z",
+  "updatedAt": "2021-05-31T19:45:02.869Z",
+  "networkType": "ethereum",
   "devdoc": {
     "events": {
       "RewardAdded(uint256)": {

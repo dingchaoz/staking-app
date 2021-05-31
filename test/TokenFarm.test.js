@@ -30,8 +30,6 @@ contract('TokenFarm', ([owner, investor, investor2]) => {
 		// Transfer all Eth reward tokens to farm (1million)
 		await ethToken.transfer(tokenFarm.address, tokens('1000000'))
 
-		// Send tokens to investor
-		// await ethToken.transfer(investor, tokens('100'), { from: owner })
 	})
 
 	describe("Testing Helper Functions", () => {

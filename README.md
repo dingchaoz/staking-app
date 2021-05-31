@@ -97,6 +97,19 @@ reusable, an `updateReward` modifier was created to modify the behaviours of sta
 - Lazy Evaluation: it means that the contract's state will be updated only when needed, makes more sense for contracts that naturally incentivise users to call them at a future date. This approach is chosen in the current contract as it is easy to be implemented.  
 - Eager Evaluation: it means scheduling a contract to be called at a specified block in the future, which is more useful when state transitions are lacking incentives, [Ethereum Alarm Clock](https://www.ethereum-alarm-clock.com/) provides a TimeNode acting as the counterparty to transactions that are scheduled.
 
+## Future Improvement Ideas
+- Remove the refund tokens function, to favor pull over push to shift risk
+- Remove the use of array, use struct instead, use mapping(address => uint256) where uint256 is the index to the struct in the array.
+- Rewrite the modifier to function so we don't violate check-effects-interaction pattern
+- Create a look up table for power calculation: When the exponent of the power is not that large, you can use the table lookup method to calculate the power, Taking the common ERC20 token accuracy of 18 as an example, the result of 10**18 needs to be represented by 8 bytes
+- Take token address or interface as input of tokenfarm constructor
+
+- Create a struct of a pool(tokens staked, reward allocated, mapping of user cooldownblocks, etc ) and invidual delegation (shares, token staked)
+- Seperate storage logic from contract functions core logic
+- More roles: distribute award list
+- Private functions to set up pool
+- Proxy upgrade
+
 ## Citation
 If you use this code for your publications, please cite it as:
 
