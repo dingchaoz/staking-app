@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -19,9 +18,11 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /* ========== STATE VARIABLES ========== */
 
-    bytes32 public constant NAME = "Staking Farm";
     IERC20 public token;
     MEthToken public mToken;
+
+    // contrac name
+    bytes32 public constant NAME = "Staking Farm";
 
     // time when current reward period finishes
     uint256 public periodFinish = 0;
@@ -35,19 +36,16 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     // last time reward rate is updated
     uint256 public lastUpdateTime;
 
-    // reward per token staked
+    // reward per token staked: rewardPerTokenStored * token staked = reward 
     uint256 public rewardPerTokenStored;
 
     // total staked token amount
     uint256 public totalStaked;
 
-    // stakers array
-    address[] public stakers;
-
     // record if an user staked or not
     mapping(address => bool) public hasStaked;
 
-    // mapping record each user's reward per token
+    // mapping record each user's reward per token, storing rewardPerTokenStored per user account
     mapping(address => uint256) public userRewardPerTokenPaid;
 
     // mapping record each user's reward
@@ -56,11 +54,18 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     // mapping record each user's staking balance
     mapping(address => uint256) public stakingBalance;
 
+    // stakers array
+    // Improvement idea: replace array with struct
+    address[] public stakers;
+
 
     /* ========== CONSTRUCTOR ========== */
 
     constructor(MEthToken _ethToken) {
         mToken = _ethToken;
+
+        // Safe ERC20 wrapped to make safe interaction with otehr ERC20 
+        // such as using safeTransfer that throws on failure
         token = IERC20(mToken);
     }
 
@@ -93,6 +98,9 @@ contract TokenFarm is Ownable, ReentrancyGuard {
      * @dev Update reward per token, rewards balance for each user
      * @param account user account address
      */
+
+     // Improvement ideas: make it as a function instead, since Modifier code is usually executed
+     // before function body, so any state chagnes or external calls violate the Checks-Effects-Interactions pattern
     modifier updateReward(address account) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
@@ -179,21 +187,6 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     /* ========== RESTRICTED FUNCTIONS ========== */
 
     /**
-     * @dev refund tokens to users, all deposited will be withdrawn
-     */
-    function refundTokens() external onlyOwner {
-        // Issue tokens to all stakers
-        for (uint256 i = 0; i < stakers.length; i++) {
-            address recipient = stakers[i];
-            uint256 balance = stakingBalance[recipient];
-            if (balance > 0) {
-                stakingBalance[msg.sender] = 0;
-                token.safeTransfer(recipient, balance);
-            }
-        }
-    }
-
-    /**
      * @dev add reward tokens to the contract by owner
      * @param amount reward token amount
      */
@@ -228,10 +221,29 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
 
         // update reward period starting time and finishing time
+        // reward calculation can arguably maintain integrity if timestamp varies by 15 seconds
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(REWARDSDURATION);
         emit RewardAdded(amount);
     }
+
+    /**
+     * @dev refund tokens to users, all deposited will be withdrawn
+     */
+    // Improvement ideas: remove this function as Pull is better than Push
+    // We should shift the transfering risk: fallback function call, running out of gas, etc to user
+    function refundTokens() external onlyOwner {
+        // Issue tokens to all stakers
+        for (uint256 i = 0; i < stakers.length; i++) {
+            address recipient = stakers[i];
+            uint256 balance = stakingBalance[recipient];
+            if (balance > 0) {
+                stakingBalance[msg.sender] = 0;
+                token.safeTransfer(recipient, balance);
+            }
+        }
+    }
+
 
     /* ========== VIEWS ========== */
 
@@ -243,7 +255,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev get last time the reward rate is updated
+     * @dev get last time the reward applicable
      */
     function lastTimeRewardApplicable() public view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
@@ -265,7 +277,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev compute reward per token staked
+     * @dev compute reward per token staked 10^18fixed-point multiplication to ensure accuracy
      */
     function rewardPerToken() public view returns (uint256) {
         if (totalStaked == 0) {
@@ -283,7 +295,7 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /**
      * @dev return reward earned per user account
-     * @param account user address
+     * @param account user address 10^18fixed-point division to ensure accuracy
      */
     function earned(address account) public view returns (uint256) {
         return
