@@ -10,6 +10,9 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+/**
+ * @title Token Staking Farm contract
+ */
 contract TokenFarm is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -20,22 +23,39 @@ contract TokenFarm is Ownable, ReentrancyGuard {
     IERC20 public token;
     MEthToken public mToken;
 
-    // total Rewards to be distributed
-    // uint256 public totalRewards;
-
+    // time when current reward period finishes
     uint256 public periodFinish = 0;
+
+    // reward rate: reward rate * reward remaining time = reward remained
     uint256 public rewardRate = 0;
+
+    // rewards duration every 7 days
     uint256 constant REWARDSDURATION = 7 days;
+
+    // last time reward rate is updated
     uint256 public lastUpdateTime;
+
+    // reward per token staked
     uint256 public rewardPerTokenStored;
+
+    // total staked token amount
     uint256 public totalStaked;
 
+    // stakers array
     address[] public stakers;
-    mapping(address => uint256) public userRewardPerTokenPaid;
-    mapping(address => uint256) public rewards;
-    mapping(address => uint256) public stakingBalance;
+
+    // record if an user staked or not
     mapping(address => bool) public hasStaked;
-    mapping(address => bool) public isStaking;
+
+    // mapping record each user's reward per token
+    mapping(address => uint256) public userRewardPerTokenPaid;
+
+    // mapping record each user's reward
+    mapping(address => uint256) public rewards;
+
+    // mapping record each user's staking balance
+    mapping(address => uint256) public stakingBalance;
+
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -46,15 +66,33 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /* ========== EVENTS ========== */
 
-    event RewardAdded(uint256 reward);
+    /**
+     * @dev Emitted when reward `amount` is added to the pool.
+     */
+    event RewardAdded(uint256 amount);
+
+    /**
+     * @dev Emitted when `user` staked token `amount`.
+     */
     event Staked(address indexed user, uint256 amount);
+
+    /**
+     * @dev Emitted when `user` withdrawn token `amount`.
+     */
     event Withdrawn(address indexed user, uint256 amount);
-    event RewardPaid(address indexed user, uint256 reward);
-    event RewardsDurationUpdated(uint256 newDuration);
-    event Recovered(address token, uint256 amount);
+
+    /**
+     * @dev Emitted when reward `amount` is distribtued to `user`.
+     */
+    event RewardPaid(address indexed user, uint256 amount);
+
 
     /* ========== MODIFIERS ========== */
 
+    /**
+     * @dev Update reward per token, rewards balance for each user
+     * @param account user account address
+     */
     modifier updateReward(address account) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
@@ -67,7 +105,11 @@ contract TokenFarm is Ownable, ReentrancyGuard {
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    // 1. Stakes Tokens (Deposit): An investor will deposit the Token into the smart contracts to starting earning rewards
+   
+    /**
+     * @dev stake tokens into contract
+     * @param amount token amount staked
+     */
     function stakeTokens(uint256 amount)
         external
         nonReentrant
@@ -86,20 +128,17 @@ contract TokenFarm is Ownable, ReentrancyGuard {
             stakers.push(msg.sender);
         }
 
-        // update stakng status
-        isStaking[msg.sender] = true;
-        hasStaked[msg.sender] = true;
-
-        // Transfer Mock Eth tokens to this contract for staking
-        // Several tokens do not revert in case of failure and return false. If one of these tokens is used in MyBank, deposit will not revert if the safeTransfer fails, and an attacker can call deposit for free..
-        // Recommendation
-        // Use SafeERC20, or ensure that the safeTransfer/safeTransferFrom return value is checked.
+        // safeTransferFrom from user to contract
         token.safeTransferFrom(msg.sender, address(this), amount);
 
         // emit staked event
         emit Staked(msg.sender, amount);
     }
 
+    /**
+     * @dev withdraw tokens out from contract
+     * @param amount token amount withdrawn
+     */
     function withdraw(uint256 amount)
         public
         nonReentrant
@@ -112,19 +151,22 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         emit Withdrawn(msg.sender, amount);
     }
 
+    /**
+     * @dev distribute reward
+     */
     function getReward() public nonReentrant updateReward(msg.sender) {
-        uint256 reward = rewards[msg.sender];
-        if (reward > 0) {
+        uint256 amount = rewards[msg.sender];
+        if (amount > 0) {
             rewards[msg.sender] = 0;
-            token.safeTransfer(msg.sender, reward);
-            emit RewardPaid(msg.sender, reward);
+            token.safeTransfer(msg.sender, amount);
+            emit RewardPaid(msg.sender, amount);
         }
     }
 
-    // Unstaking Tokens (Withdraw): Withdraw money from Dapp
-    function unstakeTokens() public {
-        // Update staking status
-        isStaking[msg.sender] = false;
+    /**
+     * @dev unstake tokens, all deposited will be withdrawn and reward will also be distributed
+     */
+    function unstakeTokens() external {
 
         getReward();
 
@@ -133,34 +175,45 @@ contract TokenFarm is Ownable, ReentrancyGuard {
         
     }
 
-    // Issuing Tokens: Earning interest (issuing tokens for people who stake them, distribute dap tokens as interes and also allow the investor to unstake their tokens from the app, give them intereset using the app)
-    function issueTokens() external onlyOwner {
+
+    /* ========== RESTRICTED FUNCTIONS ========== */
+
+    /**
+     * @dev refund tokens to users, all deposited will be withdrawn
+     */
+    function refundTokens() external onlyOwner {
         // Issue tokens to all stakers
         for (uint256 i = 0; i < stakers.length; i++) {
             address recipient = stakers[i];
             uint256 balance = stakingBalance[recipient];
             if (balance > 0) {
+                stakingBalance[msg.sender] = 0;
                 token.safeTransfer(recipient, balance);
             }
         }
     }
 
-    // owner call this function to add reward amount to the total rewards
-    // Solidity integer division might truncate. As a result, performing multiplication before division can sometimes avoid loss of precision.
-    function notifyRewardAmount(uint256 reward)
+    /**
+     * @dev add reward tokens to the contract by owner
+     * @param amount reward token amount
+     */
+    function notifyRewardAmount(uint256 amount)
         external
+        onlyOwner
         updateReward(address(0))
     {
 
-
+        // if stil in the current reward period, update reward rate by adding reward amount evenly spreaded across remaining time
         if (block.timestamp < periodFinish) {
             uint256 remaining = periodFinish.sub(block.timestamp);
-            // uint256 leftover = remaining.mul(rewardRate);
-            uint256 leftover = remaining.mul(reward).div(REWARDSDURATION);
-            rewardRate = reward.add(leftover).div(REWARDSDURATION);
+
+            // amount/rewards duration is reward rate
+            // considering solidity integer division might truncate, performing multiplication before division 
+            uint256 leftover = remaining.mul(amount).div(REWARDSDURATION);
+            rewardRate = amount.add(leftover).div(REWARDSDURATION);
             
         } else {
-            rewardRate = reward.div(REWARDSDURATION);
+            rewardRate = amount.div(REWARDSDURATION);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
@@ -173,33 +226,47 @@ contract TokenFarm is Ownable, ReentrancyGuard {
             "Provided reward too high"
         );
 
+
+        // update reward period starting time and finishing time
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(REWARDSDURATION);
-        emit RewardAdded(reward);
+        emit RewardAdded(amount);
     }
 
     /* ========== VIEWS ========== */
 
-
-    function name() public pure returns (bytes32) {
-        return NAME;
-    }
-
+    /**
+     * @dev get rewards duration
+     */
     function rewardsDuration() public pure returns (uint256) {
         return REWARDSDURATION;
     }
-    function totalSupply() external view returns (uint256) {
-        return totalStaked;
-    }
 
-    function balanceOf(address account) external view returns (uint256) {
-        return stakingBalance[account];
-    }
-
+    /**
+     * @dev get last time the reward rate is updated
+     */
     function lastTimeRewardApplicable() public view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }
 
+    /**
+     * @dev get total staked supply
+     */
+    function totalSupply() external view returns (uint256) {
+        return totalStaked;
+    }
+
+    /**
+     * @dev get stake balance 
+     * @param account user account
+     */
+    function balanceOf(address account) external view returns (uint256) {
+        return stakingBalance[account];
+    }
+
+    /**
+     * @dev compute reward per token staked
+     */
     function rewardPerToken() public view returns (uint256) {
         if (totalStaked == 0) {
             return rewardPerTokenStored;
@@ -214,6 +281,10 @@ contract TokenFarm is Ownable, ReentrancyGuard {
             );
     }
 
+    /**
+     * @dev return reward earned per user account
+     * @param account user address
+     */
     function earned(address account) public view returns (uint256) {
         return
             stakingBalance[account]
@@ -222,7 +293,18 @@ contract TokenFarm is Ownable, ReentrancyGuard {
                 .add(rewards[account]);
     }
 
+    /**
+     * @dev return reward for a given duration
+     */
     function getRewardForDuration() external view returns (uint256) {
         return rewardRate.mul(REWARDSDURATION);
     }
+
+    /**
+     * @dev get name of the contract 
+     */
+    function name() public pure returns (bytes32) {
+        return NAME;
+    }
 }
+
